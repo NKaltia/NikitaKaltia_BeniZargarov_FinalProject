@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files (in case you add one later)
+.env
+.env.*
+
+# Logs and temp files
+*.log
+*.tmp
+tmp/
+
+# NOTE: backup files (*.sql, *.tar.gz) are intentionally NOT ignored —
+# the project requires committing them to the repository.
