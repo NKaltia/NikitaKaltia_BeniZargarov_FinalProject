@@ -9,8 +9,8 @@ Lecturer: Mr. Lior Rotberg
 
 | Name | GitHub | Role |
 |---|---|---|
-| Nikita Kaltia | `<github-username>` | Team leader |
-| Beni Zargarov | `<github-username>` | Team member |
+| Nikita Kaltia | `NKaltia` | Team leader |
+| Beni Zargarov | `BeniZargarov` | Team member |
 
 We are students in the DevTools course, working together as a team of two.
 
@@ -57,11 +57,12 @@ The requirements were:
 - Both team members added terms using their own accounts, so each term shows its author.
 
 ### Scripts
+- **`restore.sh`** - loads the database and site files from `backups/` back into the containers and restarts Drupal.
+- **`cleanup.sh`** – deletes all the project's containers, network, volumes and images (the `backups/` folder is kept).
 - **`setup.sh`** – checks that Docker and Docker Compose are installed and running, pulls the latest images, starts the environment with Docker Compose, and waits until the database is ready.
 - **`backup.sh`** – creates two backup files in the `backups/` folder:
   - `drupal_db_backup.sql` – a full PostgreSQL dump (made with `pg_dump` inside the container)
   - `drupal_sites_backup.tar.gz` – the Drupal `sites` folder, including `settings.php`, which Drupal needs to find its database after a restore
-<!-- TODO (Beni): add a short description of restore.sh and cleanup.sh here once they're written. -->
 
 ### Repository structure
 ```
@@ -98,56 +99,35 @@ The requirements were:
 
 ---
 
-## e. Step-by-Step Restore Guide
+## e. Step-by-Step Setup Guide
 
-<!--
-  TODO (Beni): write this section after you've written restore.sh and cleanup.sh
-  and have actually restored the site on your machine. Follow the exact steps
-  you took, so a beginner can copy them one by one.
-
-  It should cover, in this order:
-
-  0. Prerequisites – what must be installed (Docker + Docker Compose, Git)
-     and that Docker must be running.
-
+  0. Prerequisites – in order for the project to work the following must be installed:
+     - **Git** - https://git-scm.com/downloads
+     - **Docker + Docker Compose** - https://docs.docker.com/get-docker/
+     - **Note:** docker must be open while the program works.
+     
   1. Clone the repository:
        git clone <repo-url>
        cd <repo-folder>
+       
+  2. Run ./setup.sh – This creates fresh, empty containers for the website and the database, without the saved data.
 
-  2. Make the scripts executable (once):
-       chmod +x setup.sh backup.sh restore.sh cleanup.sh
+  3. Run ./restore.sh – This loads the saved data from the backups/ folder into the containers, so the website comes back with all its content.
 
-  3. Run ./setup.sh – what it does, and what the user should see at the end.
+  4. Open http://localhost:8080 – You should see the site **האתר של ניקיטה קלטיה ובני זרגרוב**, with the glossary terms on the home page.
 
-  4. Run ./restore.sh – what it does (DB + site files + Drupal restart).
-     IMPORTANT: tell the user NOT to open localhost:8080 and run the
-     installer before restoring.
-
-  5. Open http://localhost:8080 – what they should see (site name, terms
-     on the home page).
-
-  6. Log in as demoadmin / secretpass and check that the username appears
+  5. (Optional) Log in as demoadmin / secretpass and check that the username appears
      at the top, the content is there, and the team members' users exist.
 
-  7. (Optional) Make changes and run ./backup.sh to save them, then commit
+  6. (Optional) Make changes and run ./backup.sh to save them, then commit
      and push the backups/ folder.
 
-  8. Run ./cleanup.sh – what it removes (containers, images, volumes,
-     network) and how to verify the machine is clean, e.g.:
-       docker ps -a
-       docker images
-       docker volume ls
-       docker network ls
-
-  Tip: add a screenshot or the expected terminal output for the main steps.
--->
+  7. When Closing: Run ./cleanup.sh – This deletes the containers, the network, the volumes and the images.
+     Your `backups/` folder is kept, so you can always restore the site again with `./setup.sh` and `./restore.sh`
 
 ---
 
 ## f. Additional Information
-
-<!--
-  TODO (Beni): add anything that helps users understand the project. Ideas:
 
   - Login details table:
       Admin:      demoadmin / secretpass
@@ -174,4 +154,3 @@ The requirements were:
     edits the site at a time: pull + restore -> edit -> backup + push.
 
   - LLM usage: our conversations with Claude are in the chats/ folder.
--->
