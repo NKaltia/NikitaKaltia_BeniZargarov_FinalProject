@@ -9,7 +9,7 @@ Lecturer: Mr. Lior Rotberg
 
 | Name | GitHub | Role |
 |---|---|---|
-| Nikita Kaltia | `NKaltia` | Team leader |
+| Nikita Kaltia | `NKaltia (NegativeOne36)` | Team leader |
 | Beni Zargarov | `BeniZargarov` | Team member |
 
 We are students in the DevTools course, working together as a team of two.
