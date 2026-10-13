@@ -14,6 +14,8 @@ Lecturer: Mr. Lior Rotberg
 
 We are students in the DevTools course, working together as a team of two.
 
+> Note: some of Nikita's commits appear in the history under his old Git name, **NegativeOne36**.
+
 ---
 
 ## b. What We Were Asked To Do
@@ -57,12 +59,12 @@ The requirements were:
 - Both team members added terms using their own accounts, so each term shows its author.
 
 ### Scripts
-- **`restore.sh`** - loads the database and site files from `backups/` back into the containers and restarts Drupal.
-- **`cleanup.sh`** – deletes all the project's containers, network, volumes and images (the `backups/` folder is kept).
 - **`setup.sh`** – checks that Docker and Docker Compose are installed and running, pulls the latest images, starts the environment with Docker Compose, and waits until the database is ready.
 - **`backup.sh`** – creates two backup files in the `backups/` folder:
   - `drupal_db_backup.sql` – a full PostgreSQL dump (made with `pg_dump` inside the container)
   - `drupal_sites_backup.tar.gz` – the Drupal `sites` folder, including `settings.php`, which Drupal needs to find its database after a restore
+- **`restore.sh`** – pulls the latest backup from Git, loads the database and site files from `backups/` back into the containers and restarts Drupal (runs `setup.sh` first if the containers aren't running).
+- **`cleanup.sh`** – deletes all the project's containers, network, volumes and images (the `backups/` folder is kept).
 
 ### Repository structure
 ```
@@ -101,14 +103,20 @@ The requirements were:
 
 ## e. Step-by-Step Setup Guide
 
+There are two ways to get the site running:
+- **Part 1 – Restore our site (recommended):** brings back our finished site from the backup in a few minutes.
+- **Part 2 – Build the site from scratch:** the full process we went through ourselves, from an empty Drupal to a site with content.
+
+### Part 1 – Restore our site from the backup
+
   0. Prerequisites – in order for the project to work the following must be installed:
      - **Git** - https://git-scm.com/downloads
      - **Docker + Docker Compose** - https://docs.docker.com/get-docker/
      - **Note:** docker must be open while the program works.
      
   1. Clone the repository:
-       git clone <repo-url>
-       cd <repo-folder>
+       git clone https://github.com/NKaltia/NikitaKaltia_BeniZargarov_FinalProject.git
+       cd NikitaKaltia_BeniZargarov_FinalProject
        
   2. Run ./setup.sh – This creates fresh, empty containers for the website and the database, without the saved data.
 
@@ -124,6 +132,60 @@ The requirements were:
 
   7. When Closing: Run ./cleanup.sh – This deletes the containers, the network, the volumes and the images.
      Your `backups/` folder is kept, so you can always restore the site again with `./setup.sh` and `./restore.sh`
+
+### Part 2 – Build the site from scratch (what we did)
+
+  1. Clone the repository and run ./setup.sh (same as steps 0–2 above). Do NOT run ./restore.sh.
+
+  2. Check that both containers are running:
+       docker ps
+     You should see drupal-db and drupal-site with status "Up".
+
+  3. Open http://localhost:8080 – the Drupal installer appears.
+
+  4. Choose language: English (Hebrew is also allowed) -> Save and continue.
+
+  5. Choose profile: Standard -> Save and continue.
+
+  6. Database configuration:
+     - Database type:  PostgreSQL
+     - Database name:  drupal
+     - Username:       root
+     - Password:       my-secret-pw
+     - Under "Advanced options":
+       - Host: drupal-db  (the container name – NOT localhost)
+       - Port: 5432
+     -> Save and continue, and wait for the installation to finish.
+
+  7. Configure site:
+     - Site name: האתר של ניקיטה קלטיה ובני זרגרוב
+     - Site email: any email address
+     - Username: demoadmin, Password: secretpass
+     -> Save and continue. You are now logged in as demoadmin.
+
+  8. Create a user for each team member:
+     People -> Add user -> fill in username, email and password -> Create new account.
+
+  9. Create the "Glossary Term" content type:
+     - Structure -> Content types -> Add content type
+     - Name: Glossary Term, Title field label: Term
+     - Publishing options: check "Published" and "Promoted to front page"
+     - Save and manage fields -> Create a new field:
+       Text (formatted, long), label "Definition", mark it as Required -> Save.
+
+  10. Add the terms: log in with your personal user,
+      Content -> Add content -> Glossary Term -> enter the term and its definition
+      from the course glossary on Moodle -> Save. Repeat for every term.
+
+  11. (Optional) Change the look: Appearance -> Olivero -> Settings ->
+      choose an "Olivero Color Scheme" -> Save configuration.
+
+  12. Save your work: run ./backup.sh, then commit and push the backups/ folder:
+       git add backups/
+       git commit -m "Update backup"
+       git push
+
+  13. When done: run ./cleanup.sh to remove everything from the machine.
 
 ---
 
